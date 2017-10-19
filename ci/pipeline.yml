@@ -1,0 +1,21 @@
+resources:
+- name: tensorflow-docker
+  type: git
+  source:
+    uri: git@github.com:AreteLabs/tensorflow-docker.git
+    branch: master
+    private_key: ((deploy-key.private_key))))
+- name: docker
+  type: docker-image
+  source:
+    repository: aretelabs/tensorflow
+    username: ((docker.username))
+    password: ((docker.password))
+
+jobs:
+- name: update-docker
+  serial: true
+  plan:
+  - {get: tensorflow-docker, trigger: true}
+  - put: docker
+    params: {build: tensorflow-docker}
